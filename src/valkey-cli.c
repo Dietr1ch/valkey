@@ -91,6 +91,8 @@
 #define CLI_RCFILE_DEFAULT ".valkeyclirc"
 #define CLI_AUTH_ENV "VALKEYCLI_AUTH"
 #define OLD_CLI_AUTH_ENV "REDISCLI_AUTH"
+#define CLI_HOST_ENV "VALKEYCLI_HOST"
+#define CLI_PORT_ENV "VALKEYCLI_PORT"
 #define CLI_CLUSTER_YES_ENV "VALKEYCLI_CLUSTER_YES"
 #define OLD_CLI_CLUSTER_YES_ENV "REDISCLI_CLUSTER_YES"
 
@@ -2930,6 +2932,14 @@ static void parseEnv(void) {
     }
     if (auth != NULL && config.conn_info.auth == NULL) {
         config.conn_info.auth = auth;
+    }
+    char *host = getenv(CLI_HOST_ENV);
+    if (host != NULL) {
+        config.conn_info.hostip = sdsnew(host);
+    }
+    char *port = getenv(CLI_PORT_ENV);
+    if (port != NULL) {
+        config.conn_info.hostport = atoi(port);
     }
 
     /* Check for cluster yes flag with fallback to legacy env variable */
